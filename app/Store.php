@@ -14,4 +14,11 @@ final class Store extends Model
     ];
     
     public $timestamps = false;
+    
+    public function products()
+    {
+        return $this
+            ->belongsToMany(Product::class)
+            ->withPivot(['external_product_id']);
+    }
 }

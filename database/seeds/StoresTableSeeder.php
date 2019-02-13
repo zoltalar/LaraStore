@@ -15,7 +15,7 @@ final class StoresTableSeeder extends Seeder
         return [
             [
                 'name' => 'Demo WooCommerce Store',
-                'base_url' => 'http://woocommerce.local',
+                'base_url' => 'http://woocommerce.local/',
                 'type_id' => Store::TYPE_WOOCOMMERCE
             ]
         ];

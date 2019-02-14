@@ -1,5 +1,5 @@
 # LaraStore.
-Conceptual prototype for managing multiple stores from centralized location.
+Conceptual prototype for managing multiple stores (WooCommerce and Magento) from centralized location.
 
 #### Important
 Prior `php artisan db:seed` make sure you have created following variables in `.env` file:

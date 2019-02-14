@@ -12,6 +12,8 @@ final class Product extends Model
     
     public function stores()
     {
-        return $this->belongsToMany(Store::class);
+        return $this
+            ->belongsToMany(Store::class)
+            ->withPivot(['external_product_id']);
     }
 }

@@ -17,14 +17,14 @@ class WooCommerce implements ProductContract
     /**
      * Store model.
      *
-     * @var \App\Store
+     * @var Store
      */
     protected $store;
     
     /**
      * GuzzleHttp client instance.
      * 
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     protected $client;
     
@@ -38,7 +38,7 @@ class WooCommerce implements ProductContract
     /**
      * Constructor.
      * 
-     * @param Store $store
+     * @param   Store $store
      */
     public function __construct(Store $store)
     {
@@ -53,7 +53,7 @@ class WooCommerce implements ProductContract
     /**
      * Generate handler for authorizing API requests.
      * 
-     * @return  \GuzzleHttp\HandlerStack
+     * @return  HandlerStack
      */
     private function handler()
     {
@@ -89,7 +89,7 @@ class WooCommerce implements ProductContract
     /**
      * Transform product to WooCommerce product.
      * 
-     * @param   App\Product $product
+     * @param   Product $product
      * @return  array
      */
     private function transformProduct(Product $product)

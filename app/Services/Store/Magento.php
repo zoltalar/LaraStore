@@ -16,14 +16,14 @@ class Magento implements ProductContract
     /**
      * Store model.
      *
-     * @var \App\Store
+     * @var Store
      */
     protected $store;
     
     /**
      * GuzzleHttp client instance.
      * 
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     protected $client;
     
@@ -37,7 +37,7 @@ class Magento implements ProductContract
     /**
      * Constructor.
      * 
-     * @param Store $store
+     * @param   Store $store
      */
     public function __construct(Store $store)
     {
@@ -84,7 +84,7 @@ class Magento implements ProductContract
     /**
      * Transform product to Magento product.
      * 
-     * @param   App\Product $product
+     * @param   Product $product
      * @return  array
      */
     private function transformProduct(Product $product)

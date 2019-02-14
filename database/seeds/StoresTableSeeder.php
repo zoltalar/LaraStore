@@ -15,12 +15,12 @@ final class StoresTableSeeder extends Seeder
         return [
             [
                 'name' => 'Demo WooCommerce Store',
-                'base_url' => 'http://wordpress.local/',
+                'base_url' => 'http://woocommerce.local/',
                 'type_id' => Store::TYPE_WOOCOMMERCE
             ],
             [
                 'name' => 'Demo Magento Store',
-                'base_url' => 'https://magento2forblog.saturn.polcode.com/',
+                'base_url' => 'https://magento.local/',
                 'type_id' => Store::TYPE_MAGENTO
             ]
         ];

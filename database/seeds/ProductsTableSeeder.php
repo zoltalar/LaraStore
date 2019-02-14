@@ -15,8 +15,9 @@ final class ProductsTableSeeder extends Seeder
         return [
             [
                 'name' => 'TI-84 Plus Calculator',
-                'sku' => 'M2A-593-75DF',
+                'sku' => 'TI-84-Plus',
                 'price' => 88.49,
+                'weight' => 0.20,
                 'status' => 1
             ]
         ];

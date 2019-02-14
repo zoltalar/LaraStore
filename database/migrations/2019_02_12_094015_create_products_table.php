@@ -12,7 +12,8 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('name', 191)->unique();
             $table->string('sku', 64)->unique();
-            $table->decimal('price', 12, 4);
+            $table->decimal('price', 10, 2);
+            $table->decimal('weight', 7, 2);
             $table->tinyInteger('status')->unsigned();
             $table->timestamps();
             $table->softDeletes();

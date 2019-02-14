@@ -9,10 +9,9 @@ use App\Product;
 use App\Store;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use GuzzleHttp\RequestOptions;
 
-class WooCommerce implements ProductContract
+class Magento implements ProductContract
 {
     /**
      * Store model.
@@ -29,11 +28,11 @@ class WooCommerce implements ProductContract
     protected $client;
     
     /**
-     * WooCommerce REST API URI base.
+     * Magento REST API URI base.
      * 
      * @var string
      */
-    protected $uri = 'wp-json/wc/v3/';
+    protected $uri = 'rest/V1/';
 
     /**
      * Constructor.
@@ -45,49 +44,45 @@ class WooCommerce implements ProductContract
         $this->store = $store;
         
         $this->client = new Client([
-            'base_uri' => $this->store->base_url . $this->uri,
-            'handler' => $this->handler()
+            'base_uri' => $this->store->base_url . $this->uri
         ]);
     }
     
     /**
-     * Generate handler for authorizing API requests.
+     * Get authorization token.
      * 
-     * @return  \GuzzleHttp\HandlerStack
+     * @return  string|null
      */
-    private function handler()
+    private function getToken()
     {
-        $stack = HandlerStack::create();
-        $stack->push(new Oauth1($this->oauthConfig()));
+        try {
+            $request = $this->client->post('integration/admin/token', [                
+                'query' => $this->credentials()
+            ]);
+            
+            return json_decode($request->getBody()->getContents());       
+        } catch (RequestException $e) {}
         
-        return $stack;
+        return null;
     }
     
     /**
-     * Oauth configuration for specific WooCommerce store.
+     * Credentials for specific Magento store.
      * 
      * @return  array
      */
-    private function oauthConfig()
+    private function credentials()
     {
         $id = $this->store->id ?? 0;
-        $key = env(sprintf('STORE_%d_CK', $id));
-        $secret = env(sprintf('STORE_%d_CS', $id));
         
-        $config = [
-            'consumer_key' => $key,
-            'consumer_secret' => $secret,
-            'token_secret' => '',
-            'token' => '',
-            'request_method' => Oauth1::REQUEST_METHOD_QUERY,
-            'signature_method' => Oauth1::SIGNATURE_METHOD_HMAC
+        return [
+            'username' => env(sprintf('STORE_%d_USERNAME', $id)),
+            'password' => env(sprintf('STORE_%d_PASSWORD', $id))
         ];
-        
-        return $config;
     }
     
     /**
-     * Transform product to WooCommerce product.
+     * Transform product to Magento product.
      * 
      * @param   App\Product $product
      * @return  array
@@ -97,7 +92,11 @@ class WooCommerce implements ProductContract
         return [
             'name' => $product->name,
             'sku' => $product->sku,
-            'regular_price' => $product->price,
+            'attribute_set_id' => 9,            
+            'price' => $product->price,
+            'status' => $product->status,
+            'visibility' => 1,
+            'type_id' => 'simple',
             'weight' => $product->weight
         ];
     }
@@ -106,13 +105,18 @@ class WooCommerce implements ProductContract
      * @inheritdoc
      */
     public function createProduct(Product $product): int
-    { 
+    {
+        $token = $this->getToken();        
         $product = $this->transformProduct($product);
         
         try {
             $response = $this->client->post('products', [
-                'auth' => 'oauth',
-                'form_params' => $product
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token
+                ],
+                RequestOptions::JSON => [
+                    'product' => $product
+                ]
             ]);
             
             $result = json_decode($response->getBody()->getContents());

@@ -118,7 +118,7 @@ class WooCommerce implements ProductContract
             $result = json_decode($response->getBody()->getContents());
             
             return (int) $result->id;          
-        } catch (RequestException $ex) {}
+        } catch (RequestException $e) {}
         
         return 0;
     }

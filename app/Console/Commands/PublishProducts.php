@@ -19,7 +19,7 @@ class PublishProducts extends Command
     }
 
     public function handle()
-    {        
+    {
         foreach (Store::all() as $store) {
             foreach (Product::all() as $product) {
                 $exists = $store
